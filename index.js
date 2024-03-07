@@ -17,7 +17,7 @@ const supabaseKey = process.env.SUPABASE_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 
-const searchByID = (req, res,id) => {
+const searchByID = (req, res, id) => {
    const url = `http://${URL}/ghost/api/content/posts/${id}/?key=${KEY}`
    axios.get(url)
       .then(resp => {
@@ -38,14 +38,26 @@ const searchByID = (req, res,id) => {
       })
 }
 
-const searchByTitle = (req,res,title) => {
+const searchByTitle = (req, res, title) => {
    const url = `http://${URL}/ghost/api/content/posts/?key=${KEY}`
 
    axios.get(url)
       .then(response => {
          console.log('Response:', response.data);
-         const data = response.data.posts.filter(post => post.title.toLowerCase().includes(title.toLowerCase()));
-         console.log('filtered',data)
+         const res_data = response.data.posts.filter(post => post.title.toLowerCase().includes(title.toLowerCase()));
+         console.log('filtered', res_data)
+         let data = []
+         if (res_data.length != 0) {
+            res_data.forEach(post => {
+               let temp = {}
+               temp["id"] = post.id
+               temp["title"] = post.title
+               temp["content"] = post.html
+               temp["published_date"] = post.published_at
+               temp["summary"] = post.excerpt
+               data.push(temp)
+            })
+         }
          res.status(200).json({
             "data": data
          })
@@ -132,31 +144,43 @@ app.get('/blogs/search', async (req, res) => {
    console.log(title == undefined, id == undefined)
    if (title == undefined || id == undefined) {
       if (id != undefined) {
-         searchByID(req, res,id)
+         searchByID(req, res, id)
       }
-      else{
-         searchByTitle(req,res,title)
+      else {
+         searchByTitle(req, res, title)
       }
    }
    // console.log(`Blog ID URL: ${url}`)
 });
 
-app.get('/blogs/search/recent', async (req,res) => {
+app.get('/blogs/search/recent', async (req, res) => {
    const url = `http://${URL}/ghost/api/content/posts/?key=${KEY}`
    const currentDate = new Date();
    const lastWeekDate = new Date(currentDate);
    lastWeekDate.setDate(currentDate.getDate() - 7);
-   console.log(`last week`,lastWeekDate)
-   console.log(`current date`,currentDate)
+   console.log(`last week`, lastWeekDate)
+   console.log(`current date`, currentDate)
    axios.get(url)
       .then(response => {
          // console.log('Response:', response.data);
-         const data = response.data.posts.filter(post => {
+         const res_data = response.data.posts.filter(post => {
             const publishedDate = new Date(post.published_at);
             const isPublishedLastWeek = publishedDate >= lastWeekDate && publishedDate <= currentDate;
             return isPublishedLastWeek;
-          });
+         });
 
+         let data = []
+         if (res_data.length != 0) {
+            res_data.forEach(post => {
+               let temp = {}
+               temp["id"] = post.id
+               temp["title"] = post.title
+               temp["content"] = post.html
+               temp["published_date"] = post.published_at
+               temp["summary"] = post.excerpt
+               data.push(temp)
+            })
+         }
          res.status(200).json({
             "data": data
          })
