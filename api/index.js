@@ -2,7 +2,6 @@ const express = require('express')
 const axios = require('axios')
 const cors = require('cors');
 const fs = require('fs');
-const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config()
 
 const app = express()
@@ -12,16 +11,13 @@ const KEY = process.env.GHOST_API_KEY
 const NODE_PORT = process.env.NODE_PORT
 
 
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_KEY
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 
 const searchByID = (req, res, id) => {
    const url = `http://${URL}/ghost/api/content/posts/${id}/?key=${KEY}`
    axios.get(url)
       .then(resp => {
-         console.log('resp', resp.data)
+         // console.log('resp', resp.data)
          let res_obj = {}
          res_obj["id"] = resp.data.posts[0].id
          res_obj["title"] = resp.data.posts[0].title
@@ -43,7 +39,7 @@ const searchByTitle = (req, res, title) => {
 
    axios.get(url)
       .then(response => {
-         console.log('Response:', response.data);
+         // console.log('Response:', response.data);
          const res_data = response.data.posts.filter(post => post.title.toLowerCase().includes(title.toLowerCase()));
          console.log('filtered', res_data)
          let data = []
@@ -92,7 +88,7 @@ app.get('/blogs', async (req, res) => {
 
    axios.get(url)
       .then(response => {
-         console.log('Response:', response.data);
+         // console.log('Response:', response.data);
          let data = []
          response.data.posts.forEach(element => {
             let temp = {
@@ -139,7 +135,8 @@ app.get('/blogs', async (req, res) => {
 app.get('/blogs/search', async (req, res) => {
    let id = req.query.id
    let title = req.query.title
-
+   console.log(`ds`,id)
+   console.log(`ds`,title)
    console.log(title, id)
    console.log(title == undefined, id == undefined)
    if (title == undefined || id == undefined) {
