@@ -1,12 +1,12 @@
-
-
 const express = require('express')
 const axios = require('axios')
+const cors = require('cors');
 const fs = require('fs');
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config()
 
 const app = express()
+app.use(cors());
 const URL = process.env.GHOST_API_URL
 const KEY = process.env.GHOST_API_KEY
 const NODE_PORT = process.env.NODE_PORT
@@ -28,7 +28,7 @@ const searchByID = (req, res, id) => {
          res_obj["content"] = resp.data.posts[0].html
          res_obj["published_date"] = resp.data.posts[0].published_at
          res_obj["summary"] = resp.data.posts[0].excerpt
-         res.status(200).json({ 'data': res_obj })
+         res.status(200).json({ 'data': [res_obj] })
       })
       .catch(err => {
          console.log(`Error: ${err}`)
