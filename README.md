@@ -1,5 +1,7 @@
 ### Node Ghost
 ---
+
+* Please find working demo [here](https://youtu.be/XZg_NTeuRuo)
 ### API Overview
 
 * For API documentation please visit [Ghost Blog API ](https://documenter.getpostman.com/view/27033319/2sA2xfZZ1v)
@@ -41,12 +43,15 @@
 ---
 #### Running API
 
-* Open terminal and navigate to `api` directory and run `node index.js` ideally it shows
-**Server listing at 7070**
+* Open terminal and navigate to `api` directory 
+* Run `npm install` to make sure all necessary modules in `package.json` are present.
+* Run `node index.js` ideally it shows **Server listing at 7070**
 
 #### Running Client
 
-* Open terminal and navigate to `client` directory and run `npm run dev` and the client runs at port `5173`.
+* Open terminal and navigate to `client` directory
+* Run `npm install` to make sure all necessary modules in `package.json` are present.
+* Run `npm run dev` and the client runs at port `5173`.
 * Blogs can be accessed using the UI elements.
 
 ---
